@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10091f">
+  <meta name="description" content="Neon Dash Ultimate — a synthwave arcade survival game.">
+  <title>NEON DASH // ULTIMATE</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Orbitron:wght@500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./js/config.js"></script>
+  <script defer src="./js/app.js"></script>
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="wordmark" href="#" aria-label="Neon Dash home"><span class="wordmark-icon">✦</span> NEON<span class="pink">DASH</span><small>ULTIMATE</small></a>
+      <nav class="top-actions">
+        <span class="connection" id="connection-state"><i></i> LOCAL MODE</span>
+        <button class="icon-button" id="sound-toggle" aria-label="Toggle sound" title="Toggle sound">♫</button>
+        <button class="profile-button" id="profile-button"><span class="avatar" id="avatar">G</span><span id="profile-label">GUEST</span></button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="home-view">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="pulse-dot"></span> ARCADE SYSTEM ONLINE <span class="eyebrow-line"></span> BUILD 2.0.0</p>
+          <h1>CHASE THE<br><span class="gradient-text">NEON</span><span class="outline-text">. OWN THE NIGHT.</span></h1>
+          <p class="hero-description">The city never sleeps. The grid never stops. Dodge the chaos, collect energy, and become a legend of the after-hours.</p>
+          <div class="hero-buttons">
+            <button class="button button-primary" id="play-button">INITIALIZE RUN <span>↗</span></button>
+            <button class="button button-ghost" id="how-button">HOW TO PLAY <span>⌄</span></button>
+          </div>
+          <div class="micro-stats">
+            <div><strong id="best-stat">000000</strong><span>PERSONAL BEST</span></div>
+            <div><strong id="runs-stat">00</strong><span>RUNS LOGGED</span></div>
+            <div><strong>∞</strong><span>ONE MORE TRY</span></div>
+          </div>
+        </div>
+        <div class="hero-art" aria-label="Synthwave neon sunset illustration">
+          <div class="sun-halo"></div><div class="sun"></div>
+          <div class="mountain mountain-back"></div><div class="mountain mountain-front"></div>
+          <div class="cityline"></div><div class="road"><div class="road-center"></div></div>
+          <div class="hero-car"><span></span></div>
+          <div class="art-label label-top">NIGHT DRIVE / 198X</div><div class="art-label label-bottom">TOKYO // 03:27 AM</div>
+          <div class="art-crosshair">＋</div>
+        </div>
+      </section>
+
+      <section class="game-section hidden" id="game-view">
+        <div class="section-heading">
+          <div><p class="eyebrow">LIVE SESSION / <span id="mode-name">CLASSIC</span></p><h2>THE GRID</h2></div>
+          <button class="button button-ghost compact" id="exit-game">← BACK TO BASE</button>
+        </div>
+        <div class="game-panel">
+          <div class="game-hud">
+            <div><span>SCORE</span><strong id="score">000000</strong></div>
+            <div><span>BEST</span><strong id="game-best">000000</strong></div>
+            <div><span>LEVEL</span><strong id="level">01</strong></div>
+            <div><span>SHIELDS</span><strong id="lives">♥♥♥</strong></div>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="game-canvas" width="960" height="540" aria-label="Neon Dash gameplay"></canvas>
+            <div class="game-overlay" id="game-overlay">
+              <div class="overlay-card">
+                <p class="eyebrow" id="overlay-kicker">SELECT YOUR RUN</p>
+                <h3 id="overlay-title">READY TO RIDE?</h3>
+                <p id="overlay-message">Pick a mode. The night is yours.</p>
+                <div class="mode-picker" id="mode-picker">
+                  <button class="mode-card selected" data-mode="classic"><b>01</b><strong>CLASSIC</strong><small>3 SHIELDS · BALANCED</small></button>
+                  <button class="mode-card" data-mode="time"><b>02</b><strong>TIME ATTACK</strong><small>60 SECONDS · SCORE RUSH</small></button>
+                  <button class="mode-card" data-mode="endless"><b>03</b><strong>ENDLESS</strong><small>1 SHIELD · NO MERCY</small></button>
+                </div>
+                <button class="button button-primary" id="start-run">START ENGINE <span>↗</span></button>
+              </div>
+            </div>
+            <div class="pause-chip hidden" id="pause-chip">PAUSED — PRESS ESC TO RESUME</div>
+          </div>
+          <div class="game-controls"><span><kbd>←</kbd><kbd>→</kbd> MOVE</span><span><kbd>A</kbd><kbd>D</kbd> MOVE</span><span><kbd>SPACE</kbd> ACTIVATE POWER-UP</span><span><kbd>ESC</kbd> PAUSE</span><span class="touch-hint">TOUCH / DRAG TO MOVE</span></div>
+        </div>
+      </section>
+
+      <section class="dashboard">
+        <div class="section-heading"><div><p class="eyebrow">YOUR ARCADE RECORD</p><h2>PLAYER DASHBOARD</h2></div><span class="section-index">01 / 03</span></div>
+        <div class="dashboard-grid">
+          <article class="data-card profile-card">
+            <div class="card-top"><span>PLAYER PROFILE</span><span class="card-icon">◈</span></div>
+            <div class="profile-main"><div class="big-avatar" id="big-avatar">G</div><div><h3 id="dashboard-name">GUEST RIDER</h3><p id="dashboard-status">LOCAL PROFILE · THIS DEVICE</p></div></div>
+            <div class="profile-progress"><div class="progress-label"><span>ARCADE RANK</span><strong id="rank-label">ROOKIE</strong></div><div class="progress-track"><i id="rank-progress"></i></div></div>
+            <button class="text-link" id="edit-profile">EDIT PLAYER NAME ↗</button>
+          </article>
+          <article class="data-card leaderboard-card">
+            <div class="card-top"><span>GLOBAL LEADERBOARD</span><span class="live-tag"><i></i> LIVE</span></div>
+            <div class="leaderboard-head"><span>RANK / RIDER</span><span>CLASSIC SCORE</span></div>
+            <div id="leaderboard-list" class="leaderboard-list"><div class="empty-state">Connect Supabase to load global riders.<br>Your local best is saved on this device.</div></div>
+            <button class="text-link" id="refresh-leaderboard">REFRESH RANKINGS ↻</button>
+          </article>
+          <article class="data-card achievements-card">
+            <div class="card-top"><span>ACHIEVEMENTS</span><span class="card-icon">✧</span></div>
+            <div class="achievement-list" id="achievement-list">
+              <div class="achievement"><span class="achievement-icon">⚡</span><div><strong>FIRST IGNITION</strong><small>Complete your first run</small></div><b id="ach-first">LOCKED</b></div>
+              <div class="achievement"><span class="achievement-icon">✦</span><div><strong>HIGH VOLTAGE</strong><small>Score 1,000 points</small></div><b id="ach-score">LOCKED</b></div>
+              <div class="achievement"><span class="achievement-icon">☄</span><div><strong>LIGHTSPEED</strong><small>Reach level 5</small></div><b id="ach-level">LOCKED</b></div>
+            </div>
+            <div class="achievement-count"><strong id="achievement-count">0 / 3</strong><span>UNLOCKED</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="how-section" id="how-section">
+        <div class="section-heading"><div><p class="eyebrow">QUICK START GUIDE</p><h2>LEARN THE GRID</h2></div><span class="section-index">02 / 03</span></div>
+        <div class="guide-grid">
+          <article><span class="guide-number">01</span><div class="guide-icon">⇆</div><h3>MOVE WITH INTENT</h3><p>Use arrow keys or A/D to steer. On mobile, drag your finger across the arena.</p></article>
+          <article><span class="guide-number">02</span><div class="guide-icon">◇</div><h3>DODGE THE STATIC</h3><p>Red hazards drain your shields. Watch their patterns and keep your eyes on the road.</p></article>
+          <article><span class="guide-number">03</span><div class="guide-icon">✧</div><h3>GRAB THE GLOW</h3><p>Collect cyan energy orbs for points and power-ups. Press Space to trigger your active boost.</p></article>
+        </div>
+      </section>
+
+      <section class="release-strip">
+        <div><p class="eyebrow">BUILT FOR THE AFTER HOURS</p><h2>ONE GRID. <span>INFINITE RUNS.</span></h2></div>
+        <p>Neon Dash Ultimate is an open-source browser arcade experience. No install. No excuses. Just press play.</p>
+      </section>
+    </main>
+    <footer class="footer"><a class="wordmark" href="#">✦ NEON<span class="pink">DASH</span></a><span>© 2026 NEON DASH // MADE FOR THE NIGHT</span><a href="https://github.com/" target="_blank" rel="noreferrer">GITHUB ↗</a></footer>
+  </div>
+
+  <dialog id="auth-dialog" class="modal">
+    <form method="dialog" class="modal-close-form"><button class="modal-close" aria-label="Close">×</button></form>
+    <p class="eyebrow">PLAYER IDENTITY</p><h2 id="auth-title">JOIN THE GRID</h2>
+    <p class="modal-copy" id="auth-copy">Create an account to sync your profile and scores across devices.</p>
+    <form id="auth-form" class="modal-form">
+      <label>EMAIL<input type="email" id="auth-email" placeholder="rider@example.com" required autocomplete="email"></label>
+      <label>PASSWORD<input type="password" id="auth-password" placeholder="At least 6 characters" required minlength="6" autocomplete="current-password"></label>
+      <label id="username-label">RIDER NAME<input type="text" id="auth-username" placeholder="NEON_RIDER" maxlength="18"></label>
+      <button class="button button-primary full" id="auth-submit" type="submit">CREATE ACCOUNT ↗</button>
+    </form>
+    <button class="text-link modal-switch" id="auth-switch">ALREADY REGISTERED? SIGN IN</button>
+    <p class="form-message" id="auth-message" role="status"></p>
+    <p class="modal-foot">Supabase is optional. Local play works without an account.</p>
+  </dialog>
+
+  <dialog id="name-dialog" class="modal small-modal">
+    <form method="dialog" class="modal-close-form"><button class="modal-close" aria-label="Close">×</button></form>
+    <p class="eyebrow">PLAYER SETTINGS</p><h2>YOUR CALLSIGN</h2>
+    <form id="name-form" class="modal-form"><label>RIDER NAME<input id="player-name-input" maxlength="18" minlength="2" required></label><button class="button button-primary full">SAVE CALLSIGN ↗</button></form>
+  </dialog>
+  <div class="toast" id="toast" role="status"></div>
+</body>
+</html>
