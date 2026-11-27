@@ -4,6 +4,6 @@
  * is enabled. NEVER put a service_role key or private secret in this file.
  */
 window.NEON_CONFIG = {
-  SUPABASE_URL: "https://YOUR_PROJECT_ID.supabase.co",
-  SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY"
+  SUPABASE_URL: "https://ealmipmizqmjhkmerura.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_-h-UIIisns_AhemJbk3Ohg_R8RzkMh9"
 };
